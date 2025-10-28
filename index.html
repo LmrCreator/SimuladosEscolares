@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado de Português</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =================================================== */
+        /* 1. ESTILIZAÇÃO GERAL E LAYOUT (VISUAL AGRADÁVEL) */
+        /* =================================================== */
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+            background-color: #F7F9FC; /* Light Blue/Gray Background */
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Sombra mais destacada */
+        }
+
+        /* Título e Subtítulo */
+        h1 {
+            font-weight: 700;
+            color: #4A90E2; /* Primary Blue */
+            border-bottom: 3px solid #4A90E2;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        h3 {
+            color: #4A90E2;
+            margin-top: 20px;
+            border-bottom: 1px dashed #4A90E2;
+            padding-bottom: 5px;
+        }
+
+
+        /* Card de Questão */
+        .questao {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+            transition: transform 0.2s;
+        }
+        .questao:hover {
+            transform: translateY(-2px);
+        }
+
+        .pergunta {
+            font-weight: 600; 
+            margin-bottom: 15px;
+            color: #1a1a1a;
+            font-size: 1.05em;
+        }
+
+        /* Estilo das Opções (Opções como Botões/Cards) */
+        .opcoes label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.2s;
+        }
+
+        .opcoes label:hover {
+            background-color: #E6F0FF; 
+            border-color: #4A90E2;
+        }
+        
+        .opcoes input[type="radio"] {
+            margin-right: 10px;
+            accent-color: #4A90E2; 
+        }
+
+        /* Cores para Feedback Visual (Após a correção) */
+        .resultado-correto-gabarito {
+            background-color: #D4EDDA !important; /* Success Green */
+            border-color: #C3E6CB !important;
+            font-weight: 600;
+        }
+        .resultado-incorreto-marcada {
+            background-color: #F8D7DA !important; /* Error Red */
+            border-color: #F5C6CB !important;
+        }
+
+        /* Botão de Corrigir e Novo Simulado */
+        .btn-corrigir, .btn-novo {
+            padding: 12px 25px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 20px;
+            display: block; /* Ocupa a largura total para destaque */
+            width: 100%;
+            max-width: 350px; /* Ajustado para caber o texto 'Novo Simulado...' */
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center; /* Centraliza o texto no botão */
+        }
+        
+        .btn-corrigir {
+            background-color: #4A90E2; /* Azul */
+        }
+        .btn-corrigir:hover {
+            background-color: #3A7BBF;
+            transform: translateY(-1px);
+        }
+
+        .btn-novo {
+             background-color: #28a745; /* Verde */
+        }
+        .btn-novo:hover {
+             background-color: #1e7e34;
+             transform: translateY(-1px);
+        }
+
+        /* Seção de Resultado */
+        #resultado {
+            margin-top: 40px;
+            padding: 25px;
+            border: 2px solid #4A90E2;
+            border-radius: 10px;
+            background-color: #EBF5FF; 
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .resultado-correto { color: #28a745; font-weight: 700; }
+        .resultado-incorreto { color: #dc3545; font-weight: 700; }
+
+        /* Comentários Styling */
+        #comentariosContainer { 
+            padding: 15px; 
+            border: 1px solid #eee; 
+            background-color: #fcfcfc; 
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .comentario-item { 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            border-left: 5px solid #4A90E2; 
+            background-color: #ffffff; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+        #formComentarios input[type="text"], #formComentarios textarea {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        #formComentarios button[type="submit"] {
+            background-color: #28a745 !important; /* Botão verde */
+            max-width: 200px; /* Largura menor para o botão de enviar */
+            margin: 10px auto; /* Centraliza o botão */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Simulado de Português</h1>
+        <p>Este simulado apresenta 10 questões selecionadas aleatoriamente de um banco de questões. Recarregue a página para gerar um novo conjunto de questões.</p>
+
+        <form id="simuladoForm">
+            Carregando simulado...
+        </form>
+        
+        <div id="resultado">        
+            Aguardando correção...      
+        </div>
+
+        <div style="margin-top: 40px; border-top: 2px solid #ccc; padding-top: 20px;">
+            <h2>💬 Sistema de Comentários</h2>
+            <p>Deixe seu comentário ou dúvida sobre o simulado.</p>
+
+            <form id="formComentarios">
+                <input type="text" id="nomeUsuario" placeholder="Seu Nome" required>
+                <textarea id="textoComentario" placeholder="Seu Comentário..." required></textarea>
+                <button type="submit" class="btn-corrigir">Enviar Comentário</button>
+            </form>
+
+            <hr>
+
+            <h3>Comentários Recentes</h3>
+            <div id="comentariosContainer">
+                Carregando comentários...
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        // =========================================================================
+        // 1. BANCO DE DADOS PRINCIPAL (100 QUESTÕES OBJETIVAS)
+        // =========================================================================
+        
+        const BANCO_OBJETIVAS = [
+            // --- BLOCO 1: GÊNERO DRAMÁTICO E ESTRUTURA (Q1-Q15) ---
+            { id: 'o1', pergunta: 'O termo que corresponde a ciclos de ação em determinados espaços dentro de um texto dramático é:', opcoes: { a: 'Cena', b: 'Rubrica', c: 'Ato', d: 'Didascália', e: 'Desfecho' }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o2', pergunta: 'Qual subgênero teatral na Grécia Antiga se relacionava àquilo que causava piedade e terror no espectador?', opcoes: { a: 'Comédia', b: 'Tragicomédia', c: 'Farsa', d: 'Tragédia', e: 'Melodrama' }, respostaCorreta: 'd', tema: 'GD' },
+            { id: 'o3', pergunta: 'As indicações cênicas, que contêm informações sobre cenário ou movimentos, são chamadas de:', opcoes: { a: 'Diálogos', b: 'Atos', c: 'Cenas', d: 'Rubricas ou Didascálias', e: 'Monólogos' }, respostaCorreta: 'd', tema: 'GD' },
+            { id: 'o4', pergunta: 'A Tragicomédia se caracteriza por:', opcoes: { a: 'Ter foco apenas em personagens de alta posição social.', b: 'Ter como único objetivo provocar risos e fazer críticas políticas.', c: 'Combinar conflitos sérios com finais felizes, misturando estratos sociais.', d: 'Ser um drama misturado a elementos musicais, com intensidade emotiva.', e: 'Retratar personagens caricatas em situações exageradas.' }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o5', pergunta: 'Na Grécia Antiga, na Comédia, era possível que personagens centrais fossem representadas por pessoas pertencentes a estratos sociais mais baixos, como os escravizados, porque:', opcoes: { a: 'O gênero sempre visava a queda de uma pessoa.', b: 'Os temas eram mais acessíveis à população em geral, aproximando-se do cotidiano.', c: 'O uso de máscaras impedia a diferenciação social.', d: 'Somente pessoas de alta posição social podiam atuar.', e: 'A encenação era proibida em palcos públicos.' }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o6', pergunta: 'A "quarta parede" no teatro, mencionada por Trânio, é a parede imaginária:', opcoes: { a: 'Que divide o palco em dois atos.', b: 'Na frente do palco, diante da qual fica a plateia.', c: 'Que contém as rubricas da peça.', d: 'Que separa a comédia da tragédia.', e: 'Que os atores nunca podem atravessar.' }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o7', pergunta: 'O subgênero que visa provocar o riso, retratando personagens caricatas em situações exageradas e com pouca preocupação com a verossimilhança, é o(a):', opcoes: { a: 'Tragédia', b: 'Melodrama', c: 'Farsa', d: 'Tragicomédia', e: 'Comédia' }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o8', pergunta: 'O Melodrama, atualmente, é caracterizado pela intensidade emotiva, aproximando-se das novelas de televisão, mas em sua origem era um drama misturado a:', opcoes: { a: 'Elementos circenses', b: 'Elementos musicais', c: 'Críticas políticas', d: 'Verossimilhança total', e: 'Personagens de alta posição' }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o9', pergunta: 'Qual é o obstáculo (conflito) para que os pretendentes se casem com Bianca na peça "A Megera Domada"?', opcoes: { a: 'A riqueza excessiva do pai Batista Minola.', b: 'O ciúme da irmã mais nova, Bianca.', c: 'A necessidade de que Catarina, a irmã mais velha, se case primeiro.', d: 'A paixão de Lucêncio por uma terceira pessoa.', e: 'A oposição do pretendente mais rico, Grêmio.' }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o10', pergunta: 'O nome da personagem que dialoga é apresentado antes de sua fala no texto dramático, indicando, dessa forma, sua:', opcoes: { a: 'Saída de cena', b: 'Entrada em cena', c: 'Rubrica', d: 'Didascália', e: 'Intenção' }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o11', pergunta: 'Um texto dramático, mesmo que lido como um texto literário, exige do leitor criatividade para:', opcoes: { a: 'Reescrever o desfecho.', b: 'Perceber o texto como se estivesse sendo representado em um palco.', c: 'Ignorar as rubricas.', d: 'Mudar a correlação verbal.', e: 'Identificar apenas as comédia.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o12', pergunta: 'Na Tragédia clássica, os personagens centrais eram apenas pessoas de alta posição social, como reis, generais, nobres, deuses mitológicos, porque o gênero tendia a representar:', opcoes: { a: 'A ascensão social.', b: 'A queda de uma pessoa da prosperidade à decadência.', c: 'O riso do espectador.', d: 'O cotidiano dos escravizados.', e: 'O desfecho feliz.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o13', pergunta: 'O gênero dramático é subdividido em Atos e Cenas. O que define a troca de uma **Cena**?', opcoes: { a: 'A mudança de ato.', b: 'O ciclo de ação em determinado espaço.', c: 'Os momentos da ação em que os atores estão representando.', d: 'A troca de cenário.', e: 'O ponto culminante (tensão) da história.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o14', pergunta: 'Apesar de ter um lado comercial, o videoclipe ganhou destaque artístico nas décadas de 1980 e 1990, consideradas a "era de ouro", graças a que emissora especializada?', opcoes: { a: 'BBC', b: 'CNN', c: 'MTV', d: 'HBO', e: 'Rede Globo', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o15', pergunta: 'Qual dos aspectos abaixo é essencialmente a base da linguagem audiovisual do videoclipe?', opcoes: { a: 'Apenas a coreografia.', b: 'O orçamento milionário.', c: 'A sincronização de música e imagem.', d: 'A ausência do artista principal.', e: 'O caráter exclusivamente documentário.', }, respostaCorreta: 'c', tema: 'VC' },
+            
+            // --- BLOCO 2: CORRELAÇÃO VERBAL E USOS GRAMATICAIS (Q16-Q30) ---
+            { id: 'o16', pergunta: 'A articulação temporal entre as formas verbais, que contribui para a clareza do texto, é denominada:', opcoes: { a: 'Concordância Nominal', b: 'Regência Verbal', c: 'Correlação Verbal', d: 'Conjugação Isolada', e: 'Predicado Verbal', }, respostaCorreta: 'c', tema: 'CV' },
+            { id: 'o17', pergunta: 'No período composto "Pedi que **atuassem** de modo mais intenso", a forma verbal "atuassem" está no:', opcoes: { a: 'Presente do Subjuntivo', b: 'Pretérito Perfeito do Indicativo', c: 'Pretérito Mais-que-Perfeito do Indicativo', d: 'Pretérito Imperfeito do Subjuntivo', e: 'Futuro do Presente do Indicativo', }, respostaCorreta: 'd', tema: 'CV' },
+            { id: 'o18', pergunta: 'Qual é a forma verbal na segunda oração que complementa corretamente o tempo da primeira oração ("Se esquecer sua fala...")?', opcoes: { a: 'terá dificuldade na atuação', b: 'teve dificuldade na atuação', c: 'tivesse dificuldade na atuação', d: 'teria dificuldade na atuação', e: 'tenha dificuldade na atuação', }, respostaCorreta: 'a', tema: 'CV' },
+            { id: 'o19', pergunta: 'Na frase "Eu suplico que reconsidere, Batista!", o verbo "suplico" está no modo Indicativo, enquanto "reconsidere" está no modo Subjuntivo. Isso acontece porque a segunda forma exprime:', opcoes: { a: 'Certeza e fato realizado.', b: 'Ação no futuro do presente.', c: 'Fato que ainda não foi realizado no momento da fala.', d: 'Ação passada e concluída.', e: 'Uma condição irrealizável.', }, respostaCorreta: 'c', tema: 'CV' },
+            { id: 'o20', pergunta: 'Na oração "Esperamos que ele **tenha ganhado** o prêmio", o uso do Pretérito Perfeito Composto do Subjuntivo indica que o acontecimento:', opcoes: { a: 'Ainda não ocorreu.', b: 'É incerto e futuro.', c: 'Foi concluído no momento da fala.', d: 'É uma condição.', e: 'É um desejo irrealizável.', }, respostaCorreta: 'c', tema: 'CV' },
+            { id: 'o21', pergunta: 'A forma "O restaurante **aonde** fomos ontem está fechado" está correta porque o verbo "ir" exige a preposição "a", indicando:', opcoes: { a: 'Permanência', b: 'Tempo', c: 'Movimento ou deslocamento', d: 'Causa', e: 'Condição', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o22', pergunta: 'Em qual das frases o termo "onde" está sendo usado INCORRETAMENTE, pois o verbo sugere movimento?', opcoes: { a: 'O local onde moro é tranquilo.', b: 'O palco onde a peça foi encenada era grande.', c: 'O país onde viajei era exótico.', d: 'A cidade onde nasci fica longe.', e: 'Não sei onde ele se escondeu.', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o23', pergunta: 'Qual termo pode substituir "onde" (pronome relativo) sem alterar o sentido, quando há ideia de lugar?', opcoes: { a: 'Em que', b: 'Se não', c: 'Aonde', d: 'De mais', e: 'Senão', }, respostaCorreta: 'a', tema: 'UG' },
+            { id: 'o24', pergunta: 'A frase que utiliza corretamente a expressão **"de mais"** com sentido de quantidade é:', opcoes: { a: 'Você é inteligente demais para isso.', b: 'Não há nada de mais na sua atitude.', c: 'Os demais alunos sairão agora.', d: 'Tinha vírgulas de mais no texto.', e: 'Ele fala demais, por isso se complica.', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o25', pergunta: 'Na oração "Não queria ser jogador, **senão** bombeiro", o termo em destaque funciona como conjunção e tem o sentido de:', opcoes: { a: 'Condição ("caso não")', b: 'Exceção ("a não ser")', c: '"Do contrário"', d: '"Mas sim"', e: 'Substantivo ("defeito")', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o26', pergunta: 'Se a expressão "se não chover" for substituída, mantendo o sentido condicional, o termo utilizado é:', opcoes: { a: 'Senão chover', b: 'Caso não chova', c: 'Aonde chover', d: 'Demais chover', e: 'Chove de mais', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o27', pergunta: 'Qual frase usa "demais" como advérbio de intensidade (equivalente a "excessivamente")?', opcoes: { a: 'Faltava gente de mais no evento.', b: 'Os demais convidados já foram embora.', c: 'Ele é chato demais.', d: 'O único senão dele é ser exigente.', e: 'Apresse-se, senão perde o trem.', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o28', pergunta: 'O advérbio "demais" também pode ter o sentido de:', opcoes: { a: 'Exceção', b: 'Conclusão', c: 'Apesar disso', d: 'Além disso (Ademais)', e: 'Substituição', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o29', pergunta: 'Em qual caso a locução adjetiva "de mais" pode ser corretamente substituída por **"a mais"**?', opcoes: { a: 'Ele corre de mais.', b: 'Tínhamos tempo de mais.', c: 'Ele fala de mais.', d: 'Os de mais vieram.', e: 'Não choveu de mais.', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o30', pergunta: 'Na correlação verbal, se a primeira oração for "Queria" (Pretérito Imperfeito do Indicativo), a segunda oração que complementa a ideia no passado é tipicamente formada por:', opcoes: { a: 'Presente do Subjuntivo', b: 'Pretérito Mais-que-Perfeito Composto do Subjuntivo', c: 'Futuro do Presente do Subjuntivo', d: 'Futuro do Pretérito do Indicativo', e: 'Presente do Indicativo', }, respostaCorreta: 'b', tema: 'CV' },
+            
+            // --- BLOCO 3: MÍDIA, RESENHA, MARCO CIVIL E INFOGRÁFICO (Q31-Q45) ---
+            { id: 'o31', pergunta: 'O que o texto afirma sobre a sincronia entre a canção e as imagens em um videoclipe?', opcoes: { a: 'Deve sempre condizer com a mensagem da letra.', b: 'Precisa ser completamente independente para ter sentido.', c: 'Pode ter uma existência independente, onde a desconexão entre som e imagem pode ter sentido.', d: 'É obrigatória para que o clipe não seja datado.', e: 'É o único aspecto analisado por especialistas.', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o32', pergunta: 'Um videoclipe é considerado **"atemporal"** quando:', opcoes: { a: 'Faz sentido somente no momento em que é divulgado.', b: 'Não tem participação do artista principal.', c: 'Consegue expressar um significado em qualquer época.', d: 'Possui somente coreografias dançantes.', e: 'É classificado como um documentário.', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o33', pergunta: 'A estrutura de uma Resenha Crítica, conforme o texto, é formada basicamente por:', opcoes: { a: 'Diálogo e Rubricas.', b: 'Apenas contextualização.', c: 'Contextualização (expositiva) e análise com juízo de valores (argumentativa).', d: 'Somente opinião pessoal sem critérios objetivos.', e: 'Enredo, personagens, tempo e espaço da história.', }, respostaCorreta: 'c', tema: 'RC' },
+            { id: 'o34', pergunta: 'Por que o Infográfico sobre o Marco Civil da Internet é classificado como **interativo**?', opcoes: { a: 'Porque foi publicado na Câmara dos Deputados.', b: 'Porque tem a finalidade de apresentar informações.', c: 'Porque é composto apenas por textos verbais.', d: 'Porque os usuários o manipulam, administrando o movimento de seleção do mouse.', e: 'Porque é um texto estático.', }, respostaCorreta: 'd', tema: 'IF' },
+            { id: 'o35', pergunta: 'Um infográfico interativo pode ser classificado como **multimodal** porque:', opcoes: { a: 'Tem foco em apenas um tipo de linguagem.', b: 'É estático e acompanha reportagens.', c: 'É construído por diversos tipos de linguagem, como áudios, vídeos e animação.', d: 'Não se destina ao ambiente digital.', e: 'Apresenta informações resumidas.', }, respostaCorreta: 'c', tema: 'IF' },
+            { id: 'o36', pergunta: 'O Marco Civil da Internet (Lei nº 12.965/2014) surgiu da necessidade de regulamentar as práticas virtuais, visando, entre outros, garantir a:', opcoes: { a: 'Monopolização das telecomunicações.', b: 'Responsabilidade exclusiva do usuário.', c: 'Privacidade dos usuários e responsabilização por cibercrimes.', d: 'Restrição da liberdade de expressão.', e: 'Centralização do controle de dados.', }, respostaCorreta: 'c', tema: 'MCI' },
+            { id: 'o37', pergunta: 'Um dos princípios do Marco Civil da Internet é a **Neutralidade da Rede**, que garante:', opcoes: { a: 'A exclusão definitiva de dados.', b: 'A inviolabilidade e sigilo das comunicações.', c: 'A liberdade de modelos de negócios dos provedores.', d: 'Que os provedores guardem dados por um ano.', e: 'A manutenção da qualidade contratada da conexão.', }, respostaCorreta: 'c', tema: 'MCI' },
+            { id: 'o38', pergunta: 'Qual é a obrigação dos **Provedores de Conexão** em relação aos dados dos usuários, de acordo com o Marco Civil?', opcoes: { a: 'Retirar imagens de nudez imediatamente.', b: 'Guardar, sob sigilo, os dados de conexão por seis meses.', c: 'Guardar, sob sigilo, os dados de conexão (IP, data/hora) pelo prazo de um ano.', d: 'Publicar o endereço IP de todos os usuários.', e: 'Disponibilizar o conteúdo na íntegra.', }, respostaCorreta: 'c', tema: 'MCI' },
+            { id: 'o39', pergunta: 'Os **Provedores de Aplicativos** têm a obrigação de guardar, sob sigilo, os dados de navegação dos usuários pelo prazo de:', opcoes: { a: 'Um ano.', b: 'Seis meses.', c: 'Três anos.', d: 'Indeterminado.', e: 'Um mês.', }, respostaCorreta: 'b', tema: 'MCI' },
+            { id: 'o40', pergunta: 'Mesmo que sediados no exterior, o Marco Civil estabelece que os provedores deverão respeitar a legislação brasileira, incluindo os direitos à:', opcoes: { a: 'Linguagem técnica.', b: 'Sanção presidencial.', c: 'Privacidade e ao sigilo dos dados.', d: 'Obrigação de guardar dados indefinidamente.', e: 'Criação de novos infográficos.', }, respostaCorreta: 'c', tema: 'MCI' },
+            { id: 'o41', pergunta: 'O infográfico é um gênero textual que combina textos verbais relativamente curtos e/ou dados numéricos, associados a:', opcoes: { a: 'Apenas tabelas.', b: 'Elementos gráfico-visuais (desenhos).', c: 'Somente fotografias de alta resolução.', d: 'Trechos de leis na íntegra.', e: 'Apenas a sinopse do conteúdo.', }, respostaCorreta: 'b', tema: 'IF' },
+            { id: 'o42', pergunta: 'Em uma Resenha Crítica, quem deve, idealmente, ser o autor para que a avaliação da obra siga critérios objetivos?', opcoes: { a: 'Qualquer leitor, garantindo a opinião popular.', b: 'Especialistas da área do assunto em questão.', c: 'O próprio criador da obra.', d: 'Apenas o protagonista do vídeo ou peça.', e: 'Um advogado, dada a natureza das leis.', }, respostaCorreta: 'b', tema: 'RC' },
+            { id: 'o43', pergunta: 'Para que a internet no Brasil não fosse um território caótico, o Marco Civil buscou regulamentar práticas virtuais de modo a prever:', opcoes: { a: 'O uso de infográficos estáticos.', b: 'As relações sociais e seus efeitos em lei.', c: 'A exclusão apenas de vídeos musicais.', d: 'A obrigatoriedade de todas as peças serem tragicomédias.', e: 'O uso exclusivo da correlação verbal.', }, respostaCorreta: 'b', tema: 'MCI' },
+            { id: 'o44', pergunta: 'Os Provedores de Aplicativos, a pedido das vítimas, têm a obrigação de:', opcoes: { a: 'Alterar a correlação verbal das comunicações.', b: 'Retirar imagens e vídeos contendo cenas de nudez que não têm a autorização dos envolvidos.', c: 'Armazenar dados por tempo indeterminado.', d: 'Aplicar a Neutralidade da Rede apenas no exterior.', e: 'Garantir que a internet seja caótica.', }, respostaCorreta: 'b', tema: 'MCI' },
+            { id: 'o45', pergunta: 'Qual dos seguintes NÃO é um aspecto que pode ser analisado em um videoclipe, segundo o texto?', opcoes: { a: 'A relação entre a canção e as imagens.', b: 'A participação do artista da canção.', c: 'O contexto em que o videoclipe está inserido.', d: 'O orçamento gasto na produção da peça teatral.', e: 'A narrativa ou o conceito do vídeo.', }, respostaCorreta: 'd', tema: 'VC' },
+            
+            // --- BLOCO 4: DIVERSOS (Q46-Q100) - INCLUINDO REPETIÇÕES E REFRASES PARA ATINGIR 100 QUESTÕES ---
+            // Repetindo/Refraseando com foco nos detalhes e regras.
+            
+            // Repetições de Gênero Dramático e Estrutura (Q46-Q55)
+            { id: 'o46', pergunta: 'Na tragédia, embora cause piedade e terror, os personagens centrais eram apenas pessoas de:', opcoes: { a: 'Estratos sociais baixos.', b: 'Alta posição social.', c: 'Nacionalidade dinamarquesa.', d: 'Origem grega.', e: 'Qualquer status.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o47', pergunta: 'O texto menciona que o texto dramático apresenta, como um de seus elementos, o discurso:', opcoes: { a: 'Indireto livre.', b: 'Direto das personagens.', c: 'Narrativo em primeira pessoa.', d: 'Jornalístico.', e: 'Técnico-científico.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o48', pergunta: 'No teatro ocidental, o subgênero que se desenvolveu combinando aspectos de tragédia e comédia é a:', opcoes: { a: 'Farsa', b: 'Melodrama', c: 'Tragicomédia', d: 'Comédia clássica', e: 'Tragédia pura', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o49', pergunta: 'Na comédia, o objetivo principal era provocar risos, ao mesmo tempo em que fazia críticas a:', opcoes: { a: 'Apenas deuses mitológicos.', b: 'Atores e diretores.', c: 'Aspectos da sociedade (costumes, cargos e projetos políticos).', d: 'Elementos musicais.', e: 'O uso de rubricas.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o50', pergunta: 'A "cena" no texto dramático é definida como o momento da ação em que:', opcoes: { a: 'Há mudança de cenário.', b: 'Os atores estão representando.', c: 'O conflito é resolvido.', d: 'O nome da personagem é omitido.', e: 'O ato termina.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o51', pergunta: 'Qual dos subgêneros é atualmente comparado às novelas de televisão devido à sua intensidade emotiva?', opcoes: { a: 'Farsa', b: 'Tragicomédia', c: 'Comédia', d: 'Tragédia', e: 'Melodrama', }, respostaCorreta: 'e', tema: 'GD' },
+            { id: 'o52', pergunta: 'A peça "A Megera Domada", de Shakespeare, é classificada como uma:', opcoes: { a: 'Tragédia pura.', b: 'Farsa moderna.', c: 'Comédia romântica.', d: 'Melodrama musical.', e: 'Didascália longa.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o53', pergunta: 'Em anos anteriores, você já estudou que um texto dramático é feito para ser:', opcoes: { a: 'Apenas lido.', b: 'Exclusivamente publicado.', c: 'Encenado.', d: 'Revisado por advogados.', e: 'Traduzido por poetas.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o54', pergunta: 'Um dos símbolos do teatro na Grécia Antiga eram as:', opcoes: { a: 'Liras.', b: 'Espadas.', c: 'Máscaras.', d: 'Coroas.', e: 'Túnicas vermelhas.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o55', pergunta: 'A rubrica (ou didascália) contém informações sobre as características físicas e psicológicas das personagens, além de:', opcoes: { a: 'O discurso direto.', b: 'O número do ato.', c: 'O cenário e os movimentos.', d: 'A correlação verbal.', e: 'A opinião do resenhista.', }, respostaCorreta: 'c', tema: 'GD' },
+            
+            // Repetições de Correlação Verbal e Usos Gramaticais (Q56-Q70)
+            { id: 'o56', pergunta: 'Qual oração apresenta um erro de Correlação Verbal?', opcoes: { a: 'Pedi que atuassem de modo mais intenso.', b: 'Recomendo que assista a essa peça teatral.', c: 'Se ele não tivesse se aposentado, viraria o melhor jogador.', d: 'Se conversasse com o diretor, compreenderia a perspectiva dele.', e: 'Eu suplico que reconsiderasse, Batista!', }, respostaCorreta: 'e', tema: 'CV' },
+            { id: 'o57', pergunta: 'Para expressar a ideia de que um acontecimento futuro **terá acabado** ao final de outra ação futura, a correlação verbal apropriada é:', opcoes: { a: 'Futuro do Presente do Subjuntivo + Futuro do Presente Composto do Indicativo.', b: 'Presente do Indicativo + Pretérito Perfeito Composto do Subjuntivo.', c: 'Pretérito Imperfeito do Indicativo + Pretérito Mais-que-Perfeito do Subjuntivo.', d: 'Presente do Indicativo + Pretérito Imperfeito do Subjuntivo.', e: 'Futuro do Presente do Indicativo + Pretérito Perfeito.', }, respostaCorreta: 'a', tema: 'CV' },
+            { id: 'o58', pergunta: 'O advérbio "demais" pode ter valor de pronome indefinido, significando:', opcoes: { a: '"Excessivamente"', b: '"Mas sim"', c: '"A mais"', d: '"Os outros" ou "os restantes"', e: '"Caso não"', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o59', pergunta: 'Em qual caso a conjunção "senão" tem sentido de "à exceção de" (preposição)?', opcoes: { a: 'Estude, senão reprovará.', b: 'Ninguém o ajuda, senão você.', c: 'O único senão dele é ser apressado.', d: 'Não era ator, senão músico.', e: 'Se não chover, sairemos.', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o60', pergunta: 'A locução **"de mais"** é o contrário de:', opcoes: { a: 'Demasiadamente', b: 'De menos', c: 'Aonde', d: 'Senão', e: 'Onde', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o61', pergunta: 'Qual das frases exige o uso de **"aonde"**?', opcoes: { a: 'Este é o lugar ______ meus pais moraram.', b: 'Eu sei ______ você está.', c: 'Não sabemos ______ o ônibus vai.', d: 'O teatro ______ a peça foi encenada está fechado.', e: 'Você sabe ______ fica a saída?', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o62', pergunta: 'Se uma frase estabelece uma condição, o uso correto é **"se não"**, que pode ser substituído por:', opcoes: { a: 'Exceto', b: 'Do contrário', c: 'Aonde', d: 'Caso não', e: 'Apenas', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o63', pergunta: 'O uso de "onde" como pronome relativo é obrigatório quando ele faz referência a um substantivo com ideia de:', opcoes: { a: 'Tempo', b: 'Modo', c: 'Movimento', d: 'Lugar', e: 'Condição', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o64', pergunta: 'Qual a correlação correta para: "Se tivéssemos ensaiado mais..."?', opcoes: { a: '... a apresentação **seria** melhor.', b: '... a apresentação **tinha sido** melhor.', c: '... a apresentação **terá sido** melhor.', d: '... a apresentação **teria sido** melhor.', e: '... a apresentação **foi** melhor.', }, respostaCorreta: 'd', tema: 'CV' },
+            { id: 'o65', pergunta: '"Procure o objeto de seu amor..." - Nesse trecho, o verbo "Procure" está no modo imperativo, indicando:', opcoes: { a: 'Desejo', b: 'Dúvida', c: 'Ordem ou conselho', d: 'Fato realizado', e: 'Condição', }, respostaCorreta: 'c', tema: 'CV' },
+            { id: 'o66', pergunta: 'O único senão dele é ser exigente demais. Nessa frase, **senão** é um substantivo que significa:', opcoes: { a: 'Condição', b: 'A não ser', c: 'Defeito', d: 'Contrário', e: 'Mas sim', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o67', pergunta: 'A expressão **"de mais"** tem a função de:', opcoes: { a: 'Advérbio de intensidade.', b: 'Advérbio de negação.', c: 'Locução adjetiva que acompanha substantivos.', d: 'Conjunção aditiva.', e: 'Pronome indefinido.', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o68', pergunta: 'A forma "Apresse-se, **senão** chegaremos atrasados" usa a conjunção com o sentido de:', opcoes: { a: 'Exceção', b: 'Mas sim', c: 'Caso não', d: 'Do contrário', e: 'Defeito', }, respostaCorreta: 'd', tema: 'UG' },
+            { id: 'o69', pergunta: 'A correlação verbal se torna intuitiva para o falante nativo da língua portuguesa, contribuindo para que as ideias estejam:', opcoes: { a: 'Desconectadas e complexas.', b: 'Conectadas e com clareza.', c: 'Apenas no modo subjuntivo.', d: 'Em um único tempo verbal.', e: 'Fora da linearidade temporal.', }, respostaCorreta: 'b', tema: 'CV' },
+            { id: 'o70', pergunta: 'Qual verbo, em "O local fica a poucos metros do lugar **onde** o The Theatre foi encontrado", justifica o uso de **"onde"** (permanência)?', opcoes: { a: 'Ficar', b: 'Metros', c: 'Encontrado', d: 'Local', e: 'Poucos', }, respostaCorreta: 'c', tema: 'UG' },
+            
+            // Repetições de Mídia, Marco Civil e Infográfico (Q71-Q100)
+            { id: 'o71', pergunta: 'O que a MTV exibia no Brasil para escoar as obras, seguindo a lógica radiofônica?', opcoes: { a: 'Somente a música de Ivete Sangalo.', b: 'Somente o álbum visual de Beyoncé.', c: 'Videoclipes.', d: 'Peças teatrais.', e: 'Aulas de Retórica.', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o72', pergunta: 'O primeiro videoclipe exibido pela MTV foi "Video killed the radio star", da banda The Buggles, que traduzido significa:', opcoes: { a: 'A estrela da rádio está morta.', b: 'O rádio matou a estrela.', c: 'O vídeo matou os astros do rádio.', d: 'O vídeo musical é um filme.', e: 'A rádio é a estrela do vídeo.', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o73', pergunta: 'O videoclipe "Thriller" de Michael Jackson se aproxima de um pequeno filme por possuir uma:', opcoes: { a: 'Conjunção aditiva.', b: 'Linguagem exclusivamente verbal.', c: 'Narrativa de história de terror.', d: 'Análise de correlação verbal.', e: 'Cena de comédia romântica.', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o74', pergunta: 'Um videoclipe pode ser classificado como "datado" quando:', opcoes: { a: 'Contém críticas sociais.', b: 'Faz sentido somente no momento em que é divulgado.', c: 'É feito em preto e branco.', d: 'É atemporal.', e: 'Tem mais de 10 minutos.', }, respostaCorreta: 'b', tema: 'VC' },
+            { id: 'o75', pergunta: 'A parte da Resenha Crítica que fornece informações para situar o leitor sobre a obra em análise (contexto) é a parte:', opcoes: { a: 'Opinativa.', b: 'Argumentativa.', c: 'Expositiva.', d: 'Narrativa.', e: 'Didascálica.', }, respostaCorreta: 'c', tema: 'RC' },
+            { id: 'o76', pergunta: 'O infográfico é um gênero textual bastante divulgado em textos:', opcoes: { a: 'Dramáticos.', b: 'Jornalísticos.', c: 'Poéticos.', d: 'Filosóficos.', e: 'Teológicos.', }, respostaCorreta: 'b', tema: 'IF' },
+            { id: 'o77', pergunta: 'O infográfico é um texto que tem o intuito de ilustrar determinado assunto de maneira:', opcoes: { a: 'Técnica e complexa.', b: 'Exclusivamente verbal.', c: 'Didática.', d: 'Monológica.', e: 'Desconectada.', }, respostaCorreta: 'c', tema: 'IF' },
+            { id: 'o78', pergunta: 'Qual dos tópicos abaixo NÃO é um dos principais itens do Marco Civil da Internet mencionados no texto?', opcoes: { a: 'Neutralidade da rede.', b: 'Garantia de liberdade de expressão.', c: 'Regulamentação do gênero dramático.', d: 'Proteção de privacidade e dos dados pessoais.', e: 'Inviolabilidade e sigilo das comunicações.', }, respostaCorreta: 'c', tema: 'MCI' },
+            { id: 'o79', pergunta: 'Para o Provedor de Conexão, guardar os dados de conexão sob sigilo por um ano é uma:', opcoes: { a: 'Vantagem.', b: 'Sugestão.', c: 'Obrigação.', d: 'Exceção.', e: 'Proibição.', }, respostaCorreta: 'c', tema: 'MCI' },
+            { id: 'o80', pergunta: 'Apesar da consolidação da internet, o texto aponta que o Brasil ainda apresenta falhas por ser considerado um processo:', opcoes: { a: 'Antigo.', b: 'Recente.', c: 'Totalmente regulamentado.', d: 'Completamente resolvido.', e: 'Estático.', }, respostaCorreta: 'b', tema: 'MCI' },
+            { id: 'o81', pergunta: 'Em qual das frases abaixo o termo **"onde"** é usado corretamente?', opcoes: { a: 'Aonde você vai com essa pressa?', b: 'O local onde moramos é seguro.', c: 'Aonde você colocou o livro?', d: 'A cidade aonde viajamos é turística.', e: 'O filme aonde assistimos era longo.', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o82', pergunta: 'O Melodrama se aproxima das novelas de televisão devido à sua:', opcoes: { a: 'Ausência de música.', b: 'Intensidade emotiva.', c: 'Presença de reis e nobres.', d: 'Preocupação com a verossimilhança.', e: 'Estrutura de farsa.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o83', pergunta: 'Se a Resenha Crítica deve emitir um juízo de valores (opinião), ela é, necessariamente, um texto:', opcoes: { a: 'Expositivo.', b: 'Narrativo.', c: 'Argumentativo.', d: 'Didascálico.', e: 'Interativo.', }, respostaCorreta: 'c', tema: 'RC' },
+            { id: 'o84', pergunta: 'A Comédia visa provocar risos, ao mesmo tempo em que faz críticas a:', opcoes: { a: 'Apenas a corrupção.', b: 'Somente o rei.', c: 'Certos aspectos da sociedade.', d: 'Atores ruins.', e: 'Atores ricos.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o85', pergunta: 'O que o Marco Civil da Internet buscou combater ao regulamentar as práticas virtuais?', opcoes: { a: 'A falta de infográficos.', b: 'A lentidão da internet.', c: 'O uso de pronome relativo.', d: 'O território caótico da internet.', e: 'O excesso de videoclipes.', }, respostaCorreta: 'd', tema: 'MCI' },
+            { id: 'o86', pergunta: 'Qual dos verbos a seguir, no contexto da Correlação Verbal, sugere uma ação concluída no momento da fala?', opcoes: { a: 'Reconsidere', b: 'Assista', c: 'Tenha ganhado', d: 'Converse', e: 'Suplico', }, respostaCorreta: 'c', tema: 'CV' },
+            { id: 'o87', pergunta: 'Em qual das frases a expressão **"de mais"** está sendo utilizada corretamente?', opcoes: { a: 'Você fala demais para o meu gosto.', b: 'Não há nada de mais na atitude dele.', c: 'Ele come de mais e passa mal.', d: 'Os demais alunos já saíram.', e: 'A tarefa era fácil demais.', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o88', pergunta: 'O infográfico sobre o Marco Civil é composto por textos verbais e elementos gráfico-visuais, servindo para ilustrar o assunto de maneira:', opcoes: { a: 'Confusa.', b: 'Técnica.', c: 'Didática.', d: 'Restritiva.', e: 'Comercial.', }, respostaCorreta: 'c', tema: 'IF' },
+            { id: 'o89', pergunta: 'A Farsa, um subgênero teatral, tem pouca preocupação com a:', opcoes: { a: 'Comédia.', b: 'Crítica.', c: 'Verossimilhança.', d: 'Encenação.', e: 'Rubrica.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o90', pergunta: 'Qual dos direitos é garantido pelo Marco Civil da Internet?', opcoes: { a: 'Monopólio da rede.', b: 'Exclusão definitiva de dados pessoais após término de contratos.', c: 'Obrigatoriedade de usar apenas infográficos estáticos.', d: 'Inviolabilidade do provedor de conexão.', e: 'Apenas a liberdade de expressão.', }, respostaCorreta: 'b', tema: 'MCI' },
+            { id: 'o91', pergunta: 'Na Correlação Verbal, o Presente do Indicativo é tipicamente seguido pelo:', opcoes: { a: 'Pretérito Mais-que-Perfeito Composto do Subjuntivo.', b: 'Futuro do Pretérito do Indicativo.', c: 'Pretérito Imperfeito do Subjuntivo.', d: 'Presente do Subjuntivo.', e: 'Futuro do Presente do Indicativo.', }, respostaCorreta: 'd', tema: 'CV' },
+            { id: 'o92', pergunta: 'O conceito de **álbuns visuais** foi uma tendência iniciada por qual artista na era on-line?', opcoes: { a: 'Michael Jackson.', b: 'Madonna.', c: 'Beyoncé.', d: 'Queen.', e: 'Emicida.', }, respostaCorreta: 'c', tema: 'VC' },
+            { id: 'o93', pergunta: 'A Comédia, na Grécia Antiga, tinha temas mais acessíveis, aproximando-se do:', opcoes: { a: 'Mundo dos deuses.', b: 'Cotidiano de todos os cidadãos.', c: 'Universo dos reis.', d: 'Palco de mármore.', e: 'Apenas a política exterior.', }, respostaCorreta: 'b', tema: 'GD' },
+            { id: 'o94', pergunta: 'A incorreção no uso de "onde" e "aonde" é considerada um problema de:', opcoes: { a: 'Regência nominal.', b: 'Flexão de grau.', c: 'Grafia.', d: 'Concordância verbal.', e: 'Transitividade verbal.', }, respostaCorreta: 'c', tema: 'UG' },
+            { id: 'o95', pergunta: 'O Marco Civil da Internet regulamenta os usos da internet para assegurar que essa rede seja:', opcoes: { a: 'Paga e restrita.', b: 'Livre e democrática.', c: 'Exclusivamente comercial.', d: 'Regida apenas pela política.', e: 'Apenas técnica.', }, respostaCorreta: 'b', tema: 'MCI' },
+            { id: 'o96', pergunta: 'Apesar de sua característica de encenação, o texto dramático pode ser lido, mas o leitor deve ter:', opcoes: { a: 'Disciplina rígida.', b: 'Muita experiência em cibercrimes.', c: 'Bastante criatividade.', d: 'O exemplar de "A arte de amar".', e: 'Conhecimento apenas de tragédia.', }, respostaCorreta: 'c', tema: 'GD' },
+            { id: 'o97', pergunta: 'A Resenha Crítica deve seguir critérios objetivos para avaliar a obra e, por isso, necessita de:', opcoes: { a: 'Um juízo de valores sem argumentos.', b: 'Opinião de leigos.', c: 'Análise de especialistas na área.', d: 'Um resumo das rubricas.', e: 'A exclusão do lado expositivo.', }, respostaCorreta: 'c', tema: 'RC' },
+            { id: 'o98', pergunta: 'Em termos de produção, o primeiro videoclipe brasileiro considerado como tal foi:', opcoes: { a: '"Bohemian Rhapsody" (Queen).', b: '"Thriller" (Michael Jackson).', c: '"Garota de Ipanema" (Marina Lima).', d: '"América do Sul" (Ney Matogrosso).', e: '"Video killed the radio star" (The Buggles).', }, respostaCorreta: 'd', tema: 'VC' },
+            { id: 'o99', pergunta: 'O termo **"Senão"** pode ter o sentido de **"exceto"**. Qual das opções usa este sentido?', opcoes: { a: 'Corra, senão perderá.', b: 'Ninguém o ajudou, senão o pai.', c: 'O senão da peça é a duração.', d: 'Não era música, senão poesia.', e: 'Se não fosse você.', }, respostaCorreta: 'b', tema: 'UG' },
+            { id: 'o100', pergunta: 'A Lei nº 12.965/2014, que estabeleceu o Marco Civil da Internet, foi sancionada no ano de:', opcoes: { a: '1981', b: '1990', c: '2009', d: '2014', e: '2020', }, respostaCorreta: 'd', tema: 'MCI' },
+        ];
+
+        let questoesExibidas = [];
+        const NUMERO_DE_QUESTOES_A_EXIBIR = 10; // <<-- Alterado de volta para 10
+
+        // =========================================================================
+        // 2. FUNÇÕES DO SIMULADO (CARREGAMENTO E CORREÇÃO)
+        // =========================================================================
+        
+        /**
+         * Função para embaralhar um array e selecionar um número específico de itens.
+         * @param {Array} array O array a ser embaralhado e selecionado.
+         * @param {number} count O número de itens a serem retornados.
+         * @returns {Array} Um novo array contendo 'count' itens aleatórios e únicos.
+         */
+        function shuffleAndSelect(array, count) {
+            let shuffled = array.slice();
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Troca elementos
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            // Retorna apenas a quantidade desejada
+            return shuffled.slice(0, count); 
+        }
+
+        function montarSimulado() {
+            // Seleciona 10 questões aleatórias
+            questoesExibidas = shuffleAndSelect(BANCO_OBJETIVAS, NUMERO_DE_QUESTOES_A_EXIBIR);
+            
+            const form = document.getElementById('simuladoForm');
+            form.innerHTML = '';
+            
+            questoesExibidas.forEach((q, index) => {
+                const numeroQuestao = index + 1;
+                const divQuestao = document.createElement('div');
+                divQuestao.className = 'questao';
+                // Mantém o ID original para mapeamento no banco de dados
+                divQuestao.id = `q-${q.id}`; 
+                
+                let html = `<div class="pergunta"><strong>Questão ${numeroQuestao}/${NUMERO_DE_QUESTOES_A_EXIBIR}:</strong> ${q.pergunta}</div>`;
+                
+                // Todas são objetivas
+                html += '<div class="opcoes">';
+                for (const opcao in q.opcoes) {
+                    const idUnico = `q${numeroQuestao}-${opcao}`;
+                    // O nome do input usa o ID original da questão para a correção
+                    html += `
+                        <label for="${idUnico}">
+                            <input type="radio" id="${idUnico}" name="resposta-${q.id}" value="${opcao}">
+                            <span>(${opcao.toUpperCase()}) ${q.opcoes[opcao]}</span>
+                        </label>
+                    `;
+                }
+                html += '</div>';
+
+                divQuestao.innerHTML = html;
+                form.appendChild(divQuestao);
+            });
+            
+            // Adiciona o botão de correção
+            const btnCorrigir = document.createElement('button');
+            btnCorrigir.type = 'button';
+            btnCorrigir.className = 'btn-corrigir';
+            btnCorrigir.textContent = 'Corrigir Simulado';
+            btnCorrigir.onclick = corrigirSimulado;
+            form.appendChild(btnCorrigir);
+            
+            // Atualiza o título e a descrição
+            document.querySelector('h1').textContent = `Simulado de Português - ${NUMERO_DE_QUESTOES_A_EXIBIR} Questões Aleatórias`;
+             document.querySelector('p').textContent = `Este simulado apresenta ${NUMERO_DE_QUESTOES_A_EXIBIR} questões selecionadas aleatoriamente de um banco total de ${BANCO_OBJETIVAS.length}. Recarregue a página para gerar um novo conjunto de questões.`
+
+             // Limpa o resultado anterior
+             document.getElementById('resultado').innerHTML = 'Aguardando correção...';
+        }
+
+        function corrigirSimulado() {
+            let corretas = 0;
+            const form = document.getElementById('simuladoForm');
+            
+            // 1. Correção das Objetivas (apenas as 10 exibidas)
+            questoesExibidas.forEach((q) => { // Itera APENAS sobre as 10 questões exibidas
+                const nomeInput = `resposta-${q.id}`;
+                const respostaMarcada = form.querySelector(`input[name="${nomeInput}"]:checked`);
+                const divQuestao = document.getElementById(`q-${q.id}`);
+                
+                // Precisa verificar se a div da questão existe (deve existir)
+                if (!divQuestao) return; 
+
+                const labels = divQuestao.querySelectorAll('.opcoes label');
+                
+                // Limpa e Desabilita
+                labels.forEach(label => {
+                    label.classList.remove('resultado-correto-gabarito', 'resultado-incorreto-marcada');
+                    const radio = label.querySelector('input[type="radio"]');
+                    if(radio) radio.disabled = true; // Desabilita os inputs
+                });
+                
+                if (respostaMarcada) {
+                    if (respostaMarcada.value === q.respostaCorreta) {
+                        corretas++;
+                    } else {
+                        // Marca incorreta
+                        respostaMarcada.parentNode.classList.add('resultado-incorreto-marcada');
+                    }
+                }
+                
+                // Destaca a resposta correta (gabarito)
+                const inputCorreto = divQuestao.querySelector(`input[value="${q.respostaCorreta}"]`);
+                if (inputCorreto) {
+                    inputCorreto.parentNode.classList.add('resultado-correto-gabarito');
+                }
+            });
+
+            // 2. Exibe o resultado final
+            const totalObjetivas = NUMERO_DE_QUESTOES_A_EXIBIR;
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = `
+                <p>✅ **RESULTADO FINAL** Você acertou <span class="${corretas >= (totalObjetivas * 0.7) ? 'resultado-correto' : 'resultado-incorreto'}">${corretas}</span> de ${totalObjetivas} questões.</p>
+                <button class="btn-novo" onclick="window.location.reload()">🔁 Novo Simulado</button>
+            `;
+
+            // Remove o botão de corrigir antigo
+            const oldButton = form.querySelector('.btn-corrigir');
+            if(oldButton) oldButton.remove();
+        }
+        
+        // =========================================================================
+        // 3. CONFIGURAÇÃO DO SISTEMA DE COMENTÁRIOS (MANTIDO)
+        // =========================================================================
+        
+        // URLs do Google Forms para ENVIAR e Sheets para LER
+        const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeeP92-M7f6PM2vm62rGPPzf0YASPcQLmPMrPzfavlKHI-D6A/formResponse'; 
+        const ID_NOME = 'entry.1623291887'; 
+        const ID_COMENTARIO = 'entry.1834481104'; 
+        // URL da planilha publicada como CSV. VERIFIQUE SE ESTÁ CORRETA E PÚBLICA!
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGMRJPZdsup9DMi9dFoaad2VhyvOq9oAelRneo7NDwl7NShoDjsPEeeqA-sE21fYuczhVE-xVVuTOn/pub?gid=711566&single=true&output=csv';
+
+        // =========================================================================
+        // 4. FUNÇÕES DE COMENTÁRIO (FETCH E SUBMIT) - CORRIGIDA A QUEBRA DE LINHA
+        // =========================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const formComentarios = document.getElementById('formComentarios');
+            if (formComentarios) {
+                formComentarios.addEventListener('submit', function(event) {
+                    event.preventDefault(); 
+                
+                    const nome = document.getElementById('nomeUsuario').value;
+                    const comentario = document.getElementById('textoComentario').value;
+                
+                    if (!nome || !comentario) {
+                        alert("Por favor, preencha seu nome e o comentário.");
+                        return;
+                    }
+            
+                    const formData = new FormData();
+                    formData.append(ID_NOME, nome);
+                    formData.append(ID_COMENTARIO, comentario);
+            
+                    document.getElementById('comentariosContainer').innerHTML = 'Enviando...';
+            
+                    fetch(FORM_URL, { method: 'POST', body: formData, mode: 'no-cors' })
+                    .then(() => {
+                        alert("Comentário enviado! Aguarde um momento para que ele apareça na lista.");
+                        document.getElementById('nomeUsuario').value = '';
+                        document.getElementById('textoComentario').value = '';
+                        // Espera um pouco antes de recarregar para dar tempo do Google processar
+                        setTimeout(carregarComentarios, 2500); 
+                    })
+                    .catch(error => {
+                        // Como o modo é 'no-cors', o catch só é executado se houver erro de rede, não erro HTTP
+                        alert('Sucesso presumido! Mas se o comentário não aparecer, pode ser um erro de rede ou URL.');
+                        console.error('Erro de fetch no modo no-cors (Pode ser erro de URL ou rede)', error);
+                        // Tenta recarregar mesmo com erro de rede, pois o envio pode ter funcionado
+                        setTimeout(carregarComentarios, 2500); 
+                    });
+                });
+            }
+        });
+        
+        function carregarComentarios() {
+            const container = document.getElementById('comentariosContainer');
+            if (!container) return; 
+            
+            container.innerHTML = 'Carregando comentários...';
+        
+            fetch(SHEET_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP! Status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(csvText => {
+                    container.innerHTML = ''; 
+                    
+                    // CORREÇÃO: Split mais robusto para diferentes quebras de linha (\r\n ou \n)
+                    const linhas = csvText.split(/\r?\n/).slice(1).filter(line => line.trim() !== ''); 
+                    
+                    linhas.reverse().forEach(linha => { 
+                        // Split robusto para CSV, ignorando vírgulas dentro de aspas, e removendo aspas
+                        const colunas = linha.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.trim().replace(/"/g, ''));
+                        
+                        // O CSV deve ter pelo menos 3 colunas: Timestamp, Nome, Comentário
+                        if (colunas.length >= 3) {
+                            const dataHora = colunas[0]; 
+                            const nome = colunas[1]; 
+                            const comentario = colunas[2]; 
+        
+                            const divComentario = document.createElement('div');
+                            divComentario.className = 'comentario-item';
+                            divComentario.innerHTML = `
+                                <p><strong>${nome}</strong> <em>(${dataHora.split(' ')[0]})</em>:</p>
+                                <p style="margin-top: 5px;">${comentario}</p>
+                            `;
+                            container.appendChild(divComentario);
+                        }
+                    });
+        
+                    if (linhas.length === 0) {
+                        container.innerHTML = 'Nenhum comentário ainda. Seja o primeiro!';
+                    }
+                })
+                .catch(error => {
+                    container.innerHTML = 'Erro ao carregar comentários. Verifique a URL do Google Sheets e as permissões.';
+                    console.error("Erro ao buscar CSV:", error);
+                });
+        }
+        
+        // 5. INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', () => {
+            montarSimulado();
+            carregarComentarios();
+        });
+    </script>
+</body>
+</html>
